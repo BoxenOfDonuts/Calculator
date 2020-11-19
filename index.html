@@ -3,39 +3,42 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="resources/styles/index.css">
     <title>Calculator</title>
 </head>
 <body>
     <div class="wrapper" >
         <div class="calculator">
             <div class="numbers">
-                <button data-type="numbers" type="button">1</button>
-                <button type="button">2</button>
-                <button type="button">3</button>
-                <button type="button">4</button>
-                <button type="button">5</button>
-                <button type="button">6</button>
-                <button type="button">7</button>
-                <button type="button">8</button>
-                <button type="button">9</button>
-                <button type="button">0</button>
-                <button type="button">.</button>
+                <!-- also known as operands -->
+                <button data-type="numbers" value=1 type="button">1</button>
+                <button data-type="numbers" type="button">2</button>
+                <button data-type="numbers" type="button">3</button>
+                <button data-type="numbers" type="button">4</button>
+                <button data-type="numbers" type="button">5</button>
+                <button data-type="numbers" type="button">6</button>
+                <button data-type="numbers" type="button">7</button>
+                <button data-type="numbers" type="button">8</button>
+                <button data-type="numbers" type="button">9</button>
+                <button data-type="numbers" type="button">0</button>
             </div>
             <div class="function">
-                <button type="button">C</button>
-                <button type="button">+/-</button>
-                <button type="button">%</button>
+                <button data-type="clear" type="button">C</button>
+                <button data-type="sign" type="button">+/-</button>
+                <button data-type="percent" type="button">%</button>
+                <!-- does this go above or below? -->
+                <button data-type="decimal" type="button">.</button>
 
             </div>
             <div class="operators">
-                <button data-type="operator" type="button">/</button>
-                <button type="button">x</button>
-                <button type="button">+</button>
-                <button type="button">-</button>
-                <button type="button">=</button>
+                <button data-type="operator" data-operator="divide" type="button">/</button>
+                <button data-type="operator" data-operator="multiply" type="button">x</button>
+                <button data-type="operator" data-operator="add" type="button">+</button>
+                <button data-type="operator" data-operator="subtract" type="button">-</button>
+                <button data-type="operator" data-operator="equals" type="button">=</button>
             </div>
             <div class=display>
-                1234
+                add transition finish event listner for numbers
             </div>
         </div>
     </div>

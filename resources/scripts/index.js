@@ -1,8 +1,15 @@
 let display = document.querySelector('.display');
-let buttons = document.querySelectorAll('.calculator button');
-let Display = {
+let numberButtons = document.querySelectorAll('.numbers button');
+let operatorButtons = document.querySelectorAll('.operators button');
+let functionButtons = document.querySelectorAll('.function button');
+
+const Display = {
 	'onScreen': '',
-	'operator': operator,
+	'operator': '',
+	'firstValue': '',
+	'secondValue': '',
+	'activeOperator': '',
+	'resultActive': false,
 }
 
 function add (a, b) {
@@ -55,26 +62,127 @@ function operator(a, b, operator) {
 
 }
 
-function handleClick(e) {
-	// datakey or get innerhtml?
-	type = this.dataset.type || '';
-	let value = e.target.innerHTML;
-	value = (type === 'numbers') ? value: ` ${value} `;
-	Display.onScreen += value;
-	updateDisplay(value)
+function updateActive(e) {
+	if (Display.activeOperator) {
+		Display.activeOperator.target.classList.toggle('active');
+		Display['activeOperator'] = e;
+	} else {
+		Display['activeOperator'] = e;
+	}
+	if (Display.activeOperator) {
+		Display.activeOperator.target.classList.toggle('active');
+	}
+}
+
+function clearDisplay() {
+	for (key in Display) {
+		Display[key] = '';
+	}
+}
+
+function inputEqual() {
+	let result = '';
+	updateActive('');
+	Display.secondValue = Number(Display.onScreen);
+	switch(Display.operator) {
+		case 'add':
+			result = add(Display.firstValue, Display.secondValue);
+			break;
+		case 'subtract':
+			result = subtract(Display.firstValue, Display.secondValue);
+			break;
+		case 'multiply':
+			result = multiply([Display.firstValue, Display.secondValue]);
+	}
+	//clearDisplay();
+	Display.onScreen = result;
+	Display.firstValue = result;
+	Display.resultActive = true;
+	updateDisplay()
+	console.log(result)
+}
+
+function handleOperator(e) {
+	let operation = this.dataset.operator || '';
+	updateActive(e)
+	console.log(operation)
+
+	if (operation != 'equals' && operation) {
+		console.log(Display.onScreen)
+		Display.operator = operation;
+		Display['firstValue'] = Number(Display.onScreen);
+		//Display.onScreen = '';
+	} else if (operation === 'equals') {
+		inputEqual();
+
+	}
+	console.log(Display)
 
 
 }
 
-function updateDisplay(value) {
+function handleClick(e) {
+	updateActive('')
+	// datakey or get innerhtml?
+	// update so it adds a class on the operator click
+	type = this.dataset.type || '';
+	let value = e.target.innerHTML;
+	//value = (type === 'numbers') ? value: ` ${value} `;
+	//if (type === 'numbers') {
+	//	Display.onScreen += value;
+	//}
+	if (Display.resultActive) {
+		Display.onScreen = '';
+		Display.resultActive = false;
+	} else if (Display.operator) {
+		Display.onScreen = '';
+	}
+	Display.onScreen += value
+
+	updateDisplay()
+
+}
+
+function handleFunction(e) {
+	let type = this.dataset.type;
+	if (type === 'clear') {
+		clearDisplay()
+	} else if (type === 'sign') {
+		flipSign()
+	} else if (type === 'percent') {
+		intoPercent()
+	} else if (type === 'decimal') {
+		toFloat()
+	}
+
+	updateDisplay()
+}
+
+function flipSign() {
+	console.log(Display.onScreen[0])
+	if (Display.onScreen[0] === '-') {
+		Display.onScreen = Display.onScreen.slice(1);
+	} else {
+		Display.onScreen = '-' + Display.onScreen;
+	}
+}
+
+function intoPercent() {
+	Display.onScreen
+}
+
+function toFloat() {
+
+}
+
+function updateDisplay() {
 	display.innerHTML = Display.onScreen;
 
 }
 
-buttons.forEach(button => button.addEventListener('click', handleClick));
-
-
-document.querySelectorAll
+numberButtons.forEach(button => button.addEventListener('click', handleClick));
+operatorButtons.forEach(button => button.addEventListener('click', handleOperator));
+functionButtons.forEach(button => button.addEventListener('click', handleFunction));
 
 module.exports = {
 	add,
