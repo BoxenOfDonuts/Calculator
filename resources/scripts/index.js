@@ -13,11 +13,11 @@ const Display = {
 }
 
 function add (a, b) {
-	return Number(a) + Number(b);	
+	return a + b	
 }
 
 function subtract (a , b) {
-	return Number(a) - Number(b);
+	return a - b;
 }
 
 function sum (array) {
@@ -25,8 +25,10 @@ function sum (array) {
 	
 }
 
-function multiply (array) {
-	return array.reduce((total, value) => total * value, 1)
+function multiply (a, b) {
+	// from calculator js 
+	//return array.reduce((total, value) => total * value, 1)
+	return a * b;
 }
 
 function power(value, toPowerOf) {
@@ -83,7 +85,6 @@ function clearDisplay() {
 function inputEqual() {
 	let result = '';
 	updateActive('');
-	Display.secondValue = Number(Display.onScreen);
 	switch(Display.operator) {
 		case 'add':
 			result = add(Display.firstValue, Display.secondValue);
@@ -92,9 +93,14 @@ function inputEqual() {
 			result = subtract(Display.firstValue, Display.secondValue);
 			break;
 		case 'multiply':
-			result = multiply([Display.firstValue, Display.secondValue]);
+			result = multiply(Display.firstValue, Display.secondValue);
+			break;
+		case 'divide':
+			result = divide(Display.firstValue, Display.secondValue);
+			break;
 	}
-	//clearDisplay();
+	result = (Number.isInteger(result)) ? result: result.toFixed(7);
+
 	Display.onScreen = result;
 	Display.firstValue = result;
 	Display.resultActive = true;
@@ -107,15 +113,30 @@ function handleOperator(e) {
 	updateActive(e)
 	console.log(operation)
 
-	if (operation != 'equals' && operation) {
+	if (operation != 'equals' && Display.firstValue && !Display.resultActive) {
+		//Display.firstValue = Display.result
+		Display.secondValue = Number(Display.onScreen);
+	 	inputEqual();
+		//Display.onScreen = '';
+	} else if (operation === 'equals') {
+		if (!Display.resultActive) {
+			Display.secondValue = Number(Display.onScreen);
+		} else {
+			Display.firstValue = Number(Display.onScreen);
+		}
+		inputEqual();
+
+	} else if (operation != 'equals' && operation) {
 		console.log(Display.onScreen)
 		Display.operator = operation;
 		Display['firstValue'] = Number(Display.onScreen);
 		//Display.onScreen = '';
-	} else if (operation === 'equals') {
-		inputEqual();
-
 	}
+	// else {
+	// 	Display.secondValue = Number(Display.onScreen);
+	// 	inputEqual();
+
+	// }
 	console.log(Display)
 
 
@@ -134,6 +155,7 @@ function handleClick(e) {
 	if (Display.resultActive) {
 		Display.onScreen = '';
 		Display.resultActive = false;
+		Display.secondValue = '';
 	} else if (Display.operator) {
 		Display.onScreen = '';
 	}
@@ -168,7 +190,7 @@ function flipSign() {
 }
 
 function intoPercent() {
-	Display.onScreen
+	Display.onScreen = (Display.onScreen / 100);
 }
 
 function toFloat() {
@@ -176,6 +198,9 @@ function toFloat() {
 }
 
 function updateDisplay() {
+	if (Display.onScreen.length > 9) {
+		Display.onScreen = Display.onScreen.substr(0,9);
+	}
 	display.innerHTML = Display.onScreen;
 
 }
