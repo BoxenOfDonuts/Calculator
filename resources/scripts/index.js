@@ -2,6 +2,7 @@ let display = document.querySelector('.display');
 let numberButtons = document.querySelectorAll('.numbers button');
 let operatorButtons = document.querySelectorAll('.operators button');
 let functionButtons = document.querySelectorAll('.function button');
+let clearKey = document.querySelector('#clear');
 
 const Display = {
 	'onScreen': '',
@@ -10,6 +11,8 @@ const Display = {
 	'secondValue': '',
 	'activeOperator': '',
 	'resultActive': false,
+	'lastPressedType': '',
+	'clearCount': 0,
 }
 
 function add (a, b) {
@@ -54,37 +57,74 @@ function factorial(value) {
 }
 
 function divide(a, b) {
-    return a / b;
-}
-
-function operator(a, b, operator) {
-    console.log(a, b, operator)
-
-    return subtract(a, b)
-
-}
-
-function updateActive(e) {
-	if (Display.activeOperator) {
-		Display.activeOperator.target.classList.toggle('active');
-		Display['activeOperator'] = e;
+	if (b === 0) {
+		return 
 	} else {
-		Display['activeOperator'] = e;
+		return a / b;
 	}
-	if (Display.activeOperator) {
-		Display.activeOperator.target.classList.toggle('active');
+}
+
+
+function handleFunction(e) {
+	let type = this.dataset.type;
+	if (type === 'clear') {
+		clearDisplay()
+	} else if (type === 'sign') {
+		flipSign()
+	} else if (type === 'percent') {
+		intoPercent()
+	} else if (type === 'number') {
+		addDecimal()
+	}
+	Display.lastPressedType = this.dataset.type;
+	updateDisplay()
+}
+
+function flipSign() {
+	let value = Number(Display.onScreen);
+	value*= -1;
+	Display.onScreen = value;
+	// console.log(Display.onScreen[0])
+	// if (Display.onScreen[0] === '-') {
+	// 	Display.onScreen = Display.onScreen.slice(1);
+	// } else {
+	// 	Display.onScreen = '-' + Display.onScreen;
+	// }
+}
+
+function intoPercent() {
+	let value = Number(Display.onScreen);
+	value/= 100;
+	Display.onScreen = value;}
+
+function addDecimal() {
+	console.log(Display.lastPressedType)
+	if (Display.lastPressedType != 'number') {
+		Display.onScreen = '0.';
+	} else {
+		Display.onScreen += '.';
+		console.log(" Display " + Display.onScreen)
 	}
 }
 
 function clearDisplay() {
-	for (key in Display) {
-		Display[key] = '';
+	if (Display.clearCount >0 ) {
+		for (key in Display) {
+			Display[key] = '';
+		}
+	} else {
+		if (Display.secondValue) {
+			Display.secondValue = '';
+		}
 	}
+
+	Display.onScreen = '0';
+	updateDisplay();
 }
 
-function inputEqual() {
+function inputEquals() {
 	let result = '';
-	updateActive('');
+	// updateActive('');
 	switch(Display.operator) {
 		case 'add':
 			result = add(Display.firstValue, Display.secondValue);
@@ -99,102 +139,64 @@ function inputEqual() {
 			result = divide(Display.firstValue, Display.secondValue);
 			break;
 	}
-	result = (Number.isInteger(result)) ? result: result.toFixed(7);
+	//result = (Number.isInteger(result)) ? result.toFixed() : result.toFixed(7);
+
+	// if (!(result === 'Error')) {
+	// 	console.log('True')
+	// 	if (!(Number.isInteger(result))) {
+	// 		result = result.toFixed(7);
+	// 	}
+
+	// 	Display.firstValue = Number(result);
+	// } 
+	if (result === 'Error' || isNaN(result)) {
+		result = 'Error';
+	} else {
+		result = parseFloat(result.toFixed(7));
+	} 
 
 	Display.onScreen = result;
-	Display.firstValue = result;
-	Display.resultActive = true;
+	// both commented out for the 'Error'
+	//Display.onScreen = result;
+	//Display.firstValue = Number(result);
+
+	
 	updateDisplay()
-	console.log(result)
+	console.log(typeof result)
 }
 
 function handleOperator(e) {
-	let operation = this.dataset.operator || '';
-	updateActive(e)
-	console.log(operation)
+	let lastPressed = Display.lastPressedType;
+	let operation = this.dataset.operator;
 
-	if (operation != 'equals' && Display.firstValue && !Display.resultActive) {
-		//Display.firstValue = Display.result
-		Display.secondValue = Number(Display.onScreen);
-	 	inputEqual();
-		//Display.onScreen = '';
-	} else if (operation === 'equals') {
-		if (!Display.resultActive) {
+	// update so its highlighted!
+	if (operation != 'equals') {
+		Display.operator = operation
+		// if last pressed?
+		Display.firstValue = Number(Display.onScreen)
+	} else {
+		if (lastPressed != 'operator') {
 			Display.secondValue = Number(Display.onScreen);
-		} else {
-			Display.firstValue = Number(Display.onScreen);
 		}
-		inputEqual();
-
-	} else if (operation != 'equals' && operation) {
-		console.log(Display.onScreen)
-		Display.operator = operation;
-		Display['firstValue'] = Number(Display.onScreen);
-		//Display.onScreen = '';
+		inputEquals();
 	}
-	// else {
-	// 	Display.secondValue = Number(Display.onScreen);
-	// 	inputEqual();
-
-	// }
-	console.log(Display)
-
-
+	Display.lastPressedType = this.dataset.type;
 }
 
 function handleClick(e) {
-	updateActive('')
-	// datakey or get innerhtml?
-	// update so it adds a class on the operator click
-	type = this.dataset.type || '';
 	let value = e.target.innerHTML;
-	//value = (type === 'numbers') ? value: ` ${value} `;
-	//if (type === 'numbers') {
-	//	Display.onScreen += value;
-	//}
-	if (Display.resultActive) {
-		Display.onScreen = '';
-		Display.resultActive = false;
-		Display.secondValue = '';
-	} else if (Display.operator) {
+	let lastPressed = Display.lastPressedType || '';
+	console.log(lastPressed)
+	if (lastPressed === 'operator') {
+		Display.onScreen = '';		
+	} else if (lastPressed != 'operator'  && Display.onScreen === '0') {
 		Display.onScreen = '';
 	}
-	Display.onScreen += value
 
-	updateDisplay()
-
-}
-
-function handleFunction(e) {
-	let type = this.dataset.type;
-	if (type === 'clear') {
-		clearDisplay()
-	} else if (type === 'sign') {
-		flipSign()
-	} else if (type === 'percent') {
-		intoPercent()
-	} else if (type === 'decimal') {
-		toFloat()
-	}
-
-	updateDisplay()
-}
-
-function flipSign() {
-	console.log(Display.onScreen[0])
-	if (Display.onScreen[0] === '-') {
-		Display.onScreen = Display.onScreen.slice(1);
-	} else {
-		Display.onScreen = '-' + Display.onScreen;
-	}
-}
-
-function intoPercent() {
-	Display.onScreen = (Display.onScreen / 100);
-}
-
-function toFloat() {
-
+	Display.onScreen += value;
+	console.log(lastPressed)
+	Display.lastPressedType = this.dataset.type;
+	updateDisplay();
 }
 
 function updateDisplay() {
