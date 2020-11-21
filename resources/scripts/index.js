@@ -3,6 +3,12 @@ let numberButtons = document.querySelectorAll('.numbers button');
 let operatorButtons = document.querySelectorAll('.operators button');
 let functionButtons = document.querySelectorAll('.function button');
 let clearKey = document.querySelector('#clear');
+let removeAtive =  () => operatorButtons.forEach(button => {
+	button.classList.remove('active');
+})
+
+// event listner to remove active from numbers and =
+let buttons = document.querySelectorAll('button');
 
 const Display = {
 	'onScreen': '',
@@ -64,6 +70,22 @@ function divide(a, b) {
 	}
 }
 
+function transition(e) {
+	console.log(e.target.dataset.type)
+	if (Array.from(e.target.classList).includes('active')) return;
+	removeAtive()
+	e.target.classList.add('active');
+
+}
+
+function removeTransition(e) {
+	console.log(e.target.dataset.type)
+	//if (e.propertyName != 'transform') return;
+	if (e.target.dataset.type === 'operator' && e.target.dataset.operator != 'equals') return;
+	console.log('made it this far')
+	e.target.classList.remove('active');
+
+}
 
 function handleFunction(e) {
 	let type = this.dataset.type;
@@ -169,6 +191,10 @@ function handleOperator(e) {
 	let lastPressed = Display.lastPressedType;
 	let operation = this.dataset.operator;
 
+	//removeAtive()
+	//console.log(e.target.classList)
+	//e.target.classList.add('active');
+
 	// update so its highlighted!
 	if (operation != 'equals') {
 		Display.operator = operation
@@ -188,7 +214,8 @@ function handleClick(e) {
 	let lastPressed = Display.lastPressedType || '';
 	console.log(lastPressed)
 	if (lastPressed === 'operator') {
-		Display.onScreen = '';		
+		Display.onScreen = '';
+		removeAtive();	
 	} else if (lastPressed != 'operator'  && Display.onScreen === '0') {
 		Display.onScreen = '';
 	}
@@ -210,6 +237,8 @@ function updateDisplay() {
 numberButtons.forEach(button => button.addEventListener('click', handleClick));
 operatorButtons.forEach(button => button.addEventListener('click', handleOperator));
 functionButtons.forEach(button => button.addEventListener('click', handleFunction));
+buttons.forEach(button => button.addEventListener('click', transition))
+buttons.forEach(button => button.addEventListener('transitionend', removeTransition));
 
 module.exports = {
 	add,
