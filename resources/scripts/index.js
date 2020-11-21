@@ -120,6 +120,8 @@ function intoPercent() {
 	Display.onScreen = value;}
 
 function addDecimal() {
+	// you can keep adding ....s
+	// also is a number - facepaml
 	console.log(Display.lastPressedType)
 	if (Display.lastPressedType != 'number') {
 		Display.onScreen = '0.';
