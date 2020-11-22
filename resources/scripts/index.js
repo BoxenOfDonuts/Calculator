@@ -82,7 +82,6 @@ function removeTransition(e) {
 	console.log(e.target.dataset.type)
 	//if (e.propertyName != 'transform') return;
 	if (e.target.dataset.type === 'operator' && e.target.dataset.operator != 'equals') return;
-	console.log('made it this far')
 	e.target.classList.remove('active');
 
 }
@@ -117,18 +116,18 @@ function flipSign() {
 function intoPercent() {
 	let value = Number(Display.onScreen);
 	value/= 100;
-	Display.onScreen = value;}
+	value = parseFloat(value.toFixed(7));
+	Display.onScreen = value;
+}
 
 function addDecimal() {
-	// you can keep adding ....s
-	// also is a number - facepaml
-	console.log(Display.lastPressedType)
 	if (Display.lastPressedType != 'number') {
 		Display.onScreen = '0.';
-	} else {
+	} else if (!Display.onScreen.includes('.')) {
 		Display.onScreen += '.';
-		console.log(" Display " + Display.onScreen)
 	}
+
+	updateDisplay()
 }
 
 function clearDisplay() {
@@ -177,6 +176,7 @@ function inputEquals() {
 		result = 'Error';
 	} else {
 		result = parseFloat(result.toFixed(7));
+		Display.firstValue = Number(result);
 	} 
 
 	Display.onScreen = result;
@@ -186,7 +186,6 @@ function inputEquals() {
 
 	
 	updateDisplay()
-	console.log(typeof result)
 }
 
 function handleOperator(e) {
@@ -214,16 +213,17 @@ function handleOperator(e) {
 function handleClick(e) {
 	let value = e.target.innerHTML;
 	let lastPressed = Display.lastPressedType || '';
-	console.log(lastPressed)
 	if (lastPressed === 'operator') {
 		Display.onScreen = '';
 		removeAtive();	
+	} else if (value === '.') {
+		value = '';
+		addDecimal()
 	} else if (lastPressed != 'operator'  && Display.onScreen === '0') {
 		Display.onScreen = '';
-	}
+	} 
 
 	Display.onScreen += value;
-	console.log(lastPressed)
 	Display.lastPressedType = this.dataset.type;
 	updateDisplay();
 }
@@ -239,8 +239,8 @@ function updateDisplay() {
 numberButtons.forEach(button => button.addEventListener('click', handleClick));
 operatorButtons.forEach(button => button.addEventListener('click', handleOperator));
 functionButtons.forEach(button => button.addEventListener('click', handleFunction));
-buttons.forEach(button => button.addEventListener('click', transition))
-buttons.forEach(button => button.addEventListener('transitionend', removeTransition));
+//buttons.forEach(button => button.addEventListener('click', transition))
+//buttons.forEach(button => button.addEventListener('transitionend', removeTransition));
 
 module.exports = {
 	add,
