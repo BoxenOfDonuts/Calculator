@@ -71,7 +71,6 @@ function divide(a, b) {
 }
 
 function transition(e) {
-	console.log(e.target.dataset.type)
 	if (Array.from(e.target.classList).includes('active')) return;
 	removeAtive()
 	e.target.classList.add('active');
@@ -79,7 +78,6 @@ function transition(e) {
 }
 
 function removeTransition(e) {
-	console.log(e.target.dataset.type)
 	//if (e.propertyName != 'transform') return;
 	if (e.target.dataset.type === 'operator' && e.target.dataset.operator != 'equals') return;
 	e.target.classList.remove('active');
@@ -241,17 +239,20 @@ operatorButtons.forEach(button => button.addEventListener('click', handleOperato
 functionButtons.forEach(button => button.addEventListener('click', handleFunction));
 buttons.forEach(button => button.addEventListener('click', transition))
 buttons.forEach(button => button.addEventListener('transitionend', removeTransition));
-window.addEventListener('keydown', e => {
-	let handled = false;
+window.addEventListener('keypress', e => {
+	let key = '';
 	if (e.key != undefined) {
 		// handle with KeyboardEvent.key & set handled to true
-	} 
+		key = document.querySelector(`button[data-key='${e.key}']`)
+	} else if (e.keyCode!= undefined) {
+		key = document.querySelector(`button[data-keyCode='${e.keyCode}']`)
+	}
 
+	if(!key) return;
+	
 	// then else if should be this below
 	// https://developer.mozilla.org/en-US/docs/Web/API/KeyboardEvent/keyCode
 
-	console.log(e.keyCode);
-	let key = document.querySelector(`button[data-key='${e.keyCode}']`)
 	console.log(key)
 	key.click();
 })
