@@ -10,8 +10,8 @@ html, body {
     height: 100%;
 }
 
+/* ugh had to remove for keyboard stuff
 .numbers button:active, .function button:active {
-    /* filter: brightness(1.5); */
     background-color: rgb(199, 199, 199);
 }
 
@@ -25,6 +25,12 @@ html, body {
     background-color: rgb(255, 198, 93);
     color: white;
     transition: .1s;
+} */
+
+.active {
+    background-color: white !important;
+    transition-duration: .1s;
+    color: black !important;
 }
 
 .calculator {
@@ -37,8 +43,11 @@ html, body {
     "numbers numbers numbers operators";
     width: 375px;
     height: 500px;
+    min-width: 375px;
+    min-height: 500px;
     border: 10px solid rgb(71, 71, 71);
     border-radius: 4px;
+    
 }
 
 .wrapper *  {
@@ -49,8 +58,11 @@ html, body {
 .wrapper {
     display: flex;
     justify-content: center;
-    align-items: center;
-    height: 100%;
+    align-items: flex-start;
+    align-content: center;
+    margin-top: 10px;
+    height: 100vh;
+    overflow: auto;
 }
 
 .numbers {
@@ -114,7 +126,7 @@ button {
     color: white;
 }
 
-@media (min-height: 700px) {
+@media only screen and (min-width: 475px) and (min-height: 600px) {
     .wrapper {
         display: block;
         margin-top: 40px;
