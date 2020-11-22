@@ -2,12 +2,9 @@ let display = document.querySelector('.display');
 let numberButtons = document.querySelectorAll('.numbers button');
 let operatorButtons = document.querySelectorAll('.operators button');
 let functionButtons = document.querySelectorAll('.function button');
-let clearKey = document.querySelector('#clear');
 let removeAtive =  () => operatorButtons.forEach(button => {
 	button.classList.remove('active');
 })
-
-// event listner to remove active from numbers and =
 let buttons = document.querySelectorAll('button');
 
 const Display = {
@@ -42,12 +39,6 @@ function multiply (a, b) {
 
 function power(value, toPowerOf) {
 	return Math.pow(value, toPowerOf);
-// 	let total = 1
-// 	for (let i=0; i < toPowerOf; i++) {
-// 		total *= value 
-// 	}
-
-// 	return total;
 }
 
 function factorial(value) {
@@ -78,7 +69,6 @@ function transition(e) {
 }
 
 function removeTransition(e) {
-	//if (e.propertyName != 'transform') return;
 	if (e.target.dataset.type === 'operator' && e.target.dataset.operator != 'equals') return;
 	e.target.classList.remove('active');
 
@@ -103,12 +93,6 @@ function flipSign() {
 	let value = Number(Display.onScreen);
 	value*= -1;
 	Display.onScreen = value;
-	// console.log(Display.onScreen[0])
-	// if (Display.onScreen[0] === '-') {
-	// 	Display.onScreen = Display.onScreen.slice(1);
-	// } else {
-	// 	Display.onScreen = '-' + Display.onScreen;
-	// }
 }
 
 function intoPercent() {
@@ -145,7 +129,6 @@ function clearDisplay() {
 
 function inputEquals() {
 	let result = '';
-	// updateActive('');
 	switch(Display.operator) {
 		case 'add':
 			result = add(Display.firstValue, Display.secondValue);
@@ -160,29 +143,16 @@ function inputEquals() {
 			result = divide(Display.firstValue, Display.secondValue);
 			break;
 	}
-	//result = (Number.isInteger(result)) ? result.toFixed() : result.toFixed(7);
 
-	// if (!(result === 'Error')) {
-	// 	console.log('True')
-	// 	if (!(Number.isInteger(result))) {
-	// 		result = result.toFixed(7);
-	// 	}
-
-	// 	Display.firstValue = Number(result);
-	// } 
 	if (result === 'Error' || isNaN(result)) {
 		result = 'Error';
 	} else {
+		result = Number(result)
 		result = parseFloat(result.toFixed(7));
 		Display.firstValue = Number(result);
 	} 
 
-	Display.onScreen = result;
-	// both commented out for the 'Error'
-	//Display.onScreen = result;
-	//Display.firstValue = Number(result);
-
-	
+	Display.onScreen = result;	
 	updateDisplay()
 }
 
@@ -190,11 +160,6 @@ function handleOperator(e) {
 	let lastPressed = Display.lastPressedType;
 	let operation = this.dataset.operator;
 
-	//removeAtive()
-	//console.log(e.target.classList)
-	//e.target.classList.add('active');
-
-	// update so its highlighted!
 	if (operation != 'equals') {
 		Display.operator = operation
 		// if last pressed?
@@ -202,7 +167,7 @@ function handleOperator(e) {
 	} else {
 		if (lastPressed != 'operator') {
 			Display.secondValue = Number(Display.onScreen);
-		}
+		} 
 		inputEquals();
 	}
 	Display.lastPressedType = this.dataset.type;
@@ -242,7 +207,6 @@ buttons.forEach(button => button.addEventListener('transitionend', removeTransit
 window.addEventListener('keypress', e => {
 	let key = '';
 	if (e.key != undefined) {
-		// handle with KeyboardEvent.key & set handled to true
 		key = document.querySelector(`button[data-key='${e.key}']`)
 	} else if (e.keyCode!= undefined) {
 		key = document.querySelector(`button[data-keyCode='${e.keyCode}']`)
@@ -250,10 +214,6 @@ window.addEventListener('keypress', e => {
 
 	if(!key) return;
 	
-	// then else if should be this below
-	// https://developer.mozilla.org/en-US/docs/Web/API/KeyboardEvent/keyCode
-
-	console.log(key)
 	key.click();
 })
 
