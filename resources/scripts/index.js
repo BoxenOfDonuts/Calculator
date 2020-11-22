@@ -239,8 +239,22 @@ function updateDisplay() {
 numberButtons.forEach(button => button.addEventListener('click', handleClick));
 operatorButtons.forEach(button => button.addEventListener('click', handleOperator));
 functionButtons.forEach(button => button.addEventListener('click', handleFunction));
-//buttons.forEach(button => button.addEventListener('click', transition))
-//buttons.forEach(button => button.addEventListener('transitionend', removeTransition));
+buttons.forEach(button => button.addEventListener('click', transition))
+buttons.forEach(button => button.addEventListener('transitionend', removeTransition));
+window.addEventListener('keydown', e => {
+	let handled = false;
+	if (e.key != undefined) {
+		// handle with KeyboardEvent.key & set handled to true
+	} 
+
+	// then else if should be this below
+	// https://developer.mozilla.org/en-US/docs/Web/API/KeyboardEvent/keyCode
+
+	console.log(e.keyCode);
+	let key = document.querySelector(`button[data-key='${e.keyCode}']`)
+	console.log(key)
+	key.click();
+})
 
 module.exports = {
 	add,
