@@ -9,6 +9,17 @@
 <body>
     <div class="wrapper" >
         <div class="calculator">
+            <div class=display>
+                <!-- add transition finish event listner for numbers -->
+                0
+            </div>
+            <div class="function">
+                <button data-type="clear" id="clear" type="button">AC</button>
+                <button data-type="sign" type="button">+/-</button>
+                <button data-type="percent" type="button">%</button>
+                <!-- does this go above or below? -->
+
+            </div>
             <div class="numbers">
                 <!-- also known as operands -->
                 <button data-type="number" value=1 type="button">1</button>
@@ -20,26 +31,15 @@
                 <button data-type="number" type="button">7</button>
                 <button data-type="number" type="button">8</button>
                 <button data-type="number" type="button">9</button>
-                <button data-type="number" type="button">0</button>
-            </div>
-            <div class="function">
-                <button data-type="clear" id="clear" type="button">AC</button>
-                <button data-type="sign" type="button">+/-</button>
-                <button data-type="percent" type="button">%</button>
-                <!-- does this go above or below? -->
+                <button data-type="number" id="zero" type="button">0</button>
                 <button data-type="number" type="button">.</button>
-
             </div>
             <div class="operators">
-                <button data-type="operator" data-operator="divide" type="button">/</button>
-                <button data-type="operator" data-operator="multiply" type="button">x</button>
-                <button data-type="operator" data-operator="add" type="button">+</button>
-                <button data-type="operator" data-operator="subtract" type="button">-</button>
-                <button data-type="operator" data-operator="equals" type="button">=</button>
-            </div>
-            <div class=display>
-                <!-- add transition finish event listner for numbers -->
-                0
+                <button data-type="operator" class="operator" data-operator="divide" type="button">/</button>
+                <button data-type="operator" class="operator" data-operator="multiply" type="button">x</button>
+                <button data-type="operator" class="operator" data-operator="subtract" type="button">-</button>
+                <button data-type="operator" class="operator" data-operator="add" type="button">+</button>
+                <button data-type="operator" class="equals" data-operator="equals" type="button">=</button>
             </div>
         </div>
     </div>
