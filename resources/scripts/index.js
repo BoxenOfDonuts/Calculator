@@ -118,27 +118,6 @@ function clearDisplay() {
 			Display[key] = '';
 		}
 	}
-	// if (Display.clearCount > 0) {
-	// 	for (key in Display) {
-	// 		Display[key] = '';
-	// 	}
-	// 	Display.clearCount = 0;
-	// } else {
-	// 	if (Display.firstValue && Display.secondValue) {
-	// 		Display.firstValue = '';
-	// 	}
-	// 	Display.clearCount++
-	// }
-
-	// if (Display.clearCount >0 ) {
-	// 	for (key in Display) {
-	// 		Display[key] = '';
-	// 	}
-	// } else {
-	// 	if (Display.secondValue) {
-	// 		Display.secondValue = '';
-	// 	}
-	// }
 
 	Display.onScreen = '0';
 	updateDisplay();
@@ -166,7 +145,7 @@ function inputEquals() {
 	} else {
 		result = Number(result)
 		result = parseFloat(result.toFixed(7));
-		Display.firstValue = Number(result);
+		Display.firstValue = result;
 	} 
 
 	Display.onScreen = result;	
@@ -181,9 +160,9 @@ function handleOperator(e) {
 		Display.operator = operation
 		Display.firstValue = Number(Display.onScreen)
 	} else {
-		if (lastPressed != 'operator') {
+		if (lastPressed != 'operator' && lastPressed != 'clear') {
 			Display.secondValue = Number(Display.onScreen);
-		} 
+		}
 		inputEquals();
 	}
 	Display.lastPressedType = this.dataset.type;
@@ -212,7 +191,6 @@ function clearHandler() {
 	if (Display.onScreen != '0') {
 		clearButton.innerHTML = 'C';
 		if (Display.clearCount > 0) {
-			//Display.clearCount = 0;
 		}
 	} else {
 		clearButton.innerHTML = 'AC';
@@ -220,6 +198,7 @@ function clearHandler() {
 }
 
 function updateDisplay() {
+	Display.onScreen = Display.onScreen.toString();
 	if (Display.onScreen.length > 9) {
 		Display.onScreen = Display.onScreen.substr(0,9);
 	}
