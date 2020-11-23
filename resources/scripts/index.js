@@ -14,7 +14,6 @@ const Display = {
 	'secondValue': '',
 	'activeOperator': '',
 	'lastPressedType': '',
-	'clearCount': 0,
 }
 
 function add (a, b) {
@@ -190,8 +189,6 @@ function clearHandler() {
 	clearButton = document.querySelector('#clear');
 	if (Display.onScreen != '0') {
 		clearButton.innerHTML = 'C';
-		if (Display.clearCount > 0) {
-		}
 	} else {
 		clearButton.innerHTML = 'AC';
 	}
