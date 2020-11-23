@@ -13,7 +13,6 @@ const Display = {
 	'firstValue': '',
 	'secondValue': '',
 	'activeOperator': '',
-	'resultActive': false,
 	'lastPressedType': '',
 	'clearCount': 0,
 }
@@ -113,15 +112,33 @@ function addDecimal() {
 }
 
 function clearDisplay() {
-	if (Display.clearCount >0 ) {
+	console.log(Display.lastPressedType)
+	if (Display.lastPressedType === 'clear') {
 		for (key in Display) {
 			Display[key] = '';
 		}
-	} else {
-		if (Display.secondValue) {
-			Display.secondValue = '';
-		}
 	}
+	// if (Display.clearCount > 0) {
+	// 	for (key in Display) {
+	// 		Display[key] = '';
+	// 	}
+	// 	Display.clearCount = 0;
+	// } else {
+	// 	if (Display.firstValue && Display.secondValue) {
+	// 		Display.firstValue = '';
+	// 	}
+	// 	Display.clearCount++
+	// }
+
+	// if (Display.clearCount >0 ) {
+	// 	for (key in Display) {
+	// 		Display[key] = '';
+	// 	}
+	// } else {
+	// 	if (Display.secondValue) {
+	// 		Display.secondValue = '';
+	// 	}
+	// }
 
 	Display.onScreen = '0';
 	updateDisplay();
@@ -160,9 +177,8 @@ function handleOperator(e) {
 	let lastPressed = Display.lastPressedType;
 	let operation = this.dataset.operator;
 
-	if (operation != 'equals') {
+	if (operation != 'equals' && lastPressed != 'clear') {
 		Display.operator = operation
-		// if last pressed?
 		Display.firstValue = Number(Display.onScreen)
 	} else {
 		if (lastPressed != 'operator') {
@@ -191,12 +207,24 @@ function handleClick(e) {
 	updateDisplay();
 }
 
+function clearHandler() {
+	clearButton = document.querySelector('#clear');
+	if (Display.onScreen != '0') {
+		clearButton.innerHTML = 'C';
+		if (Display.clearCount > 0) {
+			//Display.clearCount = 0;
+		}
+	} else {
+		clearButton.innerHTML = 'AC';
+	}
+}
+
 function updateDisplay() {
 	if (Display.onScreen.length > 9) {
 		Display.onScreen = Display.onScreen.substr(0,9);
 	}
 	display.innerHTML = Display.onScreen;
-
+	clearHandler();
 }
 
 numberButtons.forEach(button => button.addEventListener('click', handleClick));
